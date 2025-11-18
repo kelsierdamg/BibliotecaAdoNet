@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BibliotecaAdoNet.Consulta"
+             Title="Consulta"
+             BackgroundColor="#AC7434">
+    
+    <ScrollView>
+        <VerticalStackLayout Padding="10" Spacing="10">
+            <Label 
+                Text="Tipo de consulta:"
+                FontSize="24"
+                Margin="20,30,20,10"
+                VerticalOptions="Center" 
+                HorizontalOptions="Center" />
+
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="30">
+                <RadioButton 
+                    x:Name="autorRadioButton" 
+                    Content="Autor"
+                    GroupName="consultaGroup"
+                    FontSize="20"
+                    CheckedChanged="OnRadioChanged" />
+
+                <RadioButton
+                    x:Name="editorialRadioButton" 
+                    Content="Editorial"
+                    GroupName="consultaGroup"
+                    FontSize="20"
+                    CheckedChanged="OnRadioChanged" />
+            </HorizontalStackLayout>
+
+            <!-- Sección de filtros -->
+            <Frame BackgroundColor="#F0E6D2" Padding="10" Margin="10,20,10,0" CornerRadius="10">
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Selecciona Autor/Editorial:" FontAttributes="Bold" FontSize="16" />
+                    <CollectionView x:Name="filtroCollectionView" 
+                                    SelectionMode="Single" 
+                                    SelectionChanged="OnFiltroSeleccionado" 
+                                    HeightRequest="120">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame Padding="10" Margin="2" BackgroundColor="White" CornerRadius="5">
+                                    <Label Text="{Binding .}" FontSize="16" />
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Sección de libros -->
+            <Frame BackgroundColor="#F0E6D2" Padding="10" Margin="10,10,10,0" CornerRadius="10">
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Libros:" FontAttributes="Bold" FontSize="16" />
+                    <!-- Encabezados -->
+                    <Grid ColumnDefinitions="2*,2*,1*" Padding="5" BackgroundColor="LightGray">
+                        <Label Text="Título" FontAttributes="Bold" Grid.Column="0" FontSize="14"/>
+                        <Label Text="Autor/Editorial" FontAttributes="Bold" Grid.Column="1" FontSize="14"/>
+                        <Label Text="Portada" FontAttributes="Bold" Grid.Column="2" FontSize="14" HorizontalTextAlignment="Center"/>
+                    </Grid>
+
+                    <CollectionView x:Name="titulosCollectionView" 
+                                    SelectionMode="Single" 
+                                    SelectionChanged="OnTituloSeleccionado" 
+                                    HeightRequest="200">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame Padding="5" Margin="2" BackgroundColor="White" CornerRadius="5">
+                                    <Grid ColumnDefinitions="2*,2*,1*" RowSpacing="0" ColumnSpacing="5">
+                                        <Label Text="{Binding Titulo}" 
+                                               FontSize="14" 
+                                               Grid.Column="0" 
+                                               VerticalTextAlignment="Center"
+                                               LineBreakMode="TailTruncation"/>
+                                        <Label Text="{Binding AutorOEditorial}" 
+                                               FontSize="14" 
+                                               Grid.Column="1" 
+                                               VerticalTextAlignment="Center"
+                                               LineBreakMode="TailTruncation"/>
+                                        <Image Source="{Binding Portada}" 
+                                               HeightRequest="50" 
+                                               WidthRequest="35" 
+                                               Aspect="AspectFit" 
+                                               Grid.Column="2"
+                                               HorizontalOptions="Center"/>
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Portada del libro seleccionado -->
+            <Frame BackgroundColor="#F0E6D2" Padding="10" Margin="10,10,10,10" CornerRadius="10">
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Portada ampliada:" FontAttributes="Bold" FontSize="16" />
+                    <Image x:Name="portadaImage" 
+                           HeightRequest="250" 
+                           Aspect="AspectFit"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Frame>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

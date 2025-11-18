@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="BibliotecaAdoNet/BibliotecaAdoNet.csproj">
+    <Deploy Solution="Debug|*" />
+  </Project>
+</Solution>
