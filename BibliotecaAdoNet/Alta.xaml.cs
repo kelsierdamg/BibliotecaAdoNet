@@ -1,3 +1,5 @@
+using Microsoft.Data.Sqlite;
+
 namespace BibliotecaAdoNet;
 
 public partial class Alta : ContentPage
@@ -15,10 +17,19 @@ public partial class Alta : ContentPage
         string editorial = editorialEntry.Text;
         Libro nuevoLibro = new Libro(titulo, autor, editorial, portadaPath);
 
-        using (var db = new AppDbContext())
+        using (var connection = new SqliteConnection($"Data Source={App.DbPath}"))
         {
-            db.Libros.Add(nuevoLibro);
-            db.SaveChanges();
+            connection.Open();
+
+            string sql = "INSERT INTO Libros (Titulo, Autor, Editorial, Portada) VALUES (@titulo, @autor, @editorial, @portada)";
+
+            var cmd = new SqliteCommand(sql, connection);
+            cmd.Parameters.AddWithValue("@titulo", titulo);
+            cmd.Parameters.AddWithValue("@autor", autor);
+            cmd.Parameters.AddWithValue("@editorial", editorial);
+            cmd.Parameters.AddWithValue("@portada", portadaPath);
+
+            cmd.ExecuteNonQuery();
         }
 
         OnLimpiarButtonClicked(sender, e);

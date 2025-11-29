@@ -1,42 +1,61 @@
+using Microsoft.Data.Sqlite;
 using System.Collections.ObjectModel;
 
 namespace BibliotecaAdoNet;
 
 public partial class Consulta : ContentPage
 {
+    ObservableCollection<Libro> libros;
     List<string> filtroActual;
     List<LibroViewModel> titulosFiltrados;
 
     public Consulta()
     {
         InitializeComponent();
-        autorRadioButton.IsChecked = true;
+    }
+
+    private List<Libro> CargarLibros()
+    {
+        var lista = new List<Libro>();
+
+        using (var connection = new SqliteConnection($"Data Source={App.DbPath}"))
+        {
+            connection.Open();
+
+            string sql = "SELECT Id, Titulo, Autor, Editorial, Portada FROM Libros";
+
+            var cmd = new SqliteCommand(sql, connection);
+            var reader = cmd.ExecuteReader();
+
+            while (reader.Read())
+            {
+                lista.Add(new Libro(
+                    reader.GetString(1),   // Titulo
+                    reader.GetString(2),   // Autor
+                    reader.GetString(3),   // Editorial
+                    reader.IsDBNull(4) ? "" : reader.GetString(4) // Portada
+                ));
+            }
+        }
+
+        return lista;
     }
 
     protected override void OnAppearing()
     {
         base.OnAppearing();
+        libros = new ObservableCollection<Libro>(CargarLibros());
+        autorRadioButton.IsChecked = true;
         // Actualizar la lista cada vez que aparece la página
         ActualizarFiltro();
     }
 
     private void ActualizarFiltro()
     {
-        using (var db = new AppDbContext())
-        {
-            if (autorRadioButton.IsChecked)
-                filtroActual = db.Libros
-                    .Select(l => l.Autor)
-                    .Distinct()
-                    .OrderBy(a => a)
-                    .ToList();
-            else
-                filtroActual = db.Libros
-                    .Select(l => l.Editorial)
-                    .Distinct()
-                    .OrderBy(e => e)
-                    .ToList();
-        }
+        if (autorRadioButton.IsChecked)
+            filtroActual = libros.Select(l => l.Autor).Distinct().OrderBy(a => a).ToList();
+        else
+            filtroActual = libros.Select(l => l.Editorial).Distinct().OrderBy(e => e).ToList();
 
         filtroCollectionView.ItemsSource = filtroActual;
 
@@ -57,7 +76,6 @@ public partial class Consulta : ContentPage
     private void OnFiltroSeleccionado(object sender, SelectionChangedEventArgs e)
     {
         var seleccionado = e.CurrentSelection.FirstOrDefault() as string;
-
         if (seleccionado == null)
         {
             titulosCollectionView.ItemsSource = null;
@@ -65,23 +83,18 @@ public partial class Consulta : ContentPage
             return;
         }
 
-        using (var db = new AppDbContext())
+        List<Libro> librosFiltrados;
+        if (autorRadioButton.IsChecked)
+            librosFiltrados = libros.Where(l => l.Autor == seleccionado).ToList();
+        else
+            librosFiltrados = libros.Where(l => l.Editorial == seleccionado).ToList();
+
+        // Convertir a ViewModels para mostrar Autor o Editorial según el filtro
+        titulosFiltrados = librosFiltrados.Select(l => new LibroViewModel
         {
-            List<Libro> librosFiltrados;
-
-            if (autorRadioButton.IsChecked)
-                librosFiltrados = db.Libros.Where(l => l.Autor == seleccionado).ToList();
-            else
-                librosFiltrados = db.Libros.Where(l => l.Editorial == seleccionado).ToList();
-
-            titulosFiltrados = librosFiltrados
-                .Select(l => new LibroViewModel
-                {
-                    Libro = l,
-                    AutorOEditorial = autorRadioButton.IsChecked ? l.Autor : l.Editorial
-                })
-                .ToList();
-        }
+            Libro = l,
+            AutorOEditorial = autorRadioButton.IsChecked ? l.Autor : l.Editorial
+        }).ToList();
 
         titulosCollectionView.ItemsSource = titulosFiltrados;
         titulosCollectionView.SelectedItem = null;

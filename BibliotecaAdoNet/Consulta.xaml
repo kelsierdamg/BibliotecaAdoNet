@@ -40,7 +40,7 @@
                                     HeightRequest="120">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Frame Padding="10" Margin="2" BackgroundColor="White" CornerRadius="5">
+                                <Frame Padding="10" Margin="2" BackgroundColor="#F0E6D2" CornerRadius="5">
                                     <Label Text="{Binding .}" FontSize="16" />
                                 </Frame>
                             </DataTemplate>
@@ -54,7 +54,7 @@
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Libros:" FontAttributes="Bold" FontSize="16" />
                     <!-- Encabezados -->
-                    <Grid ColumnDefinitions="2*,2*,1*" Padding="5" BackgroundColor="LightGray">
+                    <Grid ColumnDefinitions="2*,2*,1*" Padding="5" BackgroundColor="#F0E6D2">
                         <Label Text="Título" FontAttributes="Bold" Grid.Column="0" FontSize="14"/>
                         <Label Text="Autor/Editorial" FontAttributes="Bold" Grid.Column="1" FontSize="14"/>
                         <Label Text="Portada" FontAttributes="Bold" Grid.Column="2" FontSize="14" HorizontalTextAlignment="Center"/>
@@ -66,7 +66,7 @@
                                     HeightRequest="200">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Frame Padding="5" Margin="2" BackgroundColor="White" CornerRadius="5">
+                                <Frame Padding="5" Margin="2" BackgroundColor="#F0E6D2" CornerRadius="5">
                                     <Grid ColumnDefinitions="2*,2*,1*" RowSpacing="0" ColumnSpacing="5">
                                         <Label Text="{Binding Titulo}" 
                                                FontSize="14" 

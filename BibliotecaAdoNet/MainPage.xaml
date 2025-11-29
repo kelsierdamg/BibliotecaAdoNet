@@ -1,15 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="BibliotecaAdoNet.MainPage">
+             x:Class="BibliotecaAdoNet.MainPage"
+             BackgroundColor="#AC7434">
 
-    <Grid>
-        <Image
-            Source="library.jpg"
-            Aspect="AspectFill"
-            Opacity="1"/>
-
-        <VerticalStackLayout
+    <VerticalStackLayout
             Padding="200"
             Spacing="25">
 
@@ -26,6 +21,5 @@
             HorizontalOptions="Center"
             TextColor="Black"
             HorizontalTextAlignment="Center"/>
-        </VerticalStackLayout>
-    </Grid>
+     </VerticalStackLayout>
 </ContentPage>
